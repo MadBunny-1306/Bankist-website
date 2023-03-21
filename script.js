@@ -29,3 +29,38 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', function (e) {
+  // Get the coordinates of the el that we want ot scroll to
+  const s1coords = section1.getBoundingClientRect(); // this method is relative to visible viewport (x and y properties change values as we scroll and change position of the elment on viewport basically)
+
+  // console.log(s1coords); //  DOMrect with positions, x and y positions, width and height of the element....
+  // console.log(e.target.getBoundingClientRect()); // e.target is element that was clicked (here it's btnScrollTo)
+  // current scroll position:
+  // console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+  // height and width of viewport (without scroll bars, just the area available for content):
+  // console.log(
+  //   'height/width',
+  //   document.documentElement.clientHeight,
+  //   document.documentElement.clientWidth
+  // );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // ); // current position with current scroll
+
+  // making scroll smooth with passing in an object instead just argument:
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // more modern way of doing this:
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
