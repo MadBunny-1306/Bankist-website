@@ -64,3 +64,14 @@ btnScrollTo.addEventListener('click', function (e) {
   // more modern way of doing this:
   section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+// Page navigation
+
+document.querySelectorAll('.nav__link').forEach(function (el) {
+  el.addEventListener('click', function (e) {
+    e.preventDefault();
+    const id = this.getAttribute('href'); // bc href looks like id of section to scroll into
+
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  });
+});
