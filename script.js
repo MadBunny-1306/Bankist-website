@@ -128,7 +128,6 @@ tabsContainer.addEventListener('click', function (e) {
 // (mouseenter doesn't bubble, mouseover bubbles up)
 
 const handleHover = function (e, opacity) {
-  // there are no chinld elements that we could accidentally click when we click on links, so we don't need closest():
   if (e.target.classList.contains('nav__link')) {
     const link = e.target;
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
@@ -149,10 +148,34 @@ const handleHover = function (e, opacity) {
 //   handleHover(e, 1);
 // });
 
-// better way - using bind() that creates a copy of the function that is called on and it will set this kw in this funcion call to whatever value that we pass into bind
-
-// Passing "argument" into handler
-nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseover', handleHover.bind(0.5)); // better way - using bind()
 nav.addEventListener('mouseout', handleHover.bind(1));
 
-// it's impossible to pass another argument into and eventHandler function, it only has 1 parameter which is event. so if we want to pass additional values into the handler function that we need to use this kw, that becomes possible with using bind()
+//////////////////////////
+// Sticky navigation
+
+// window.addEventListener('scroll', function () {
+//   console.log(this.window.scrollY);
+
+//   if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  // rootMargin: '-90px', //  box of certain amount of px that will be aplied outside of our target element (kinda extends or shortens the element) (in this case 90px is height of nav bar, so it appeares - becomes sticky - in the last 90px of header, in this rootMargin that we defined, but we can also caluclate the height dinamicaly:)
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
