@@ -43,57 +43,16 @@ document.addEventListener('keydown', function (e) {
 /// Scrolling
 
 btnScrollTo.addEventListener('click', function (e) {
-  // Get the coordinates of the el that we want ot scroll to
-  const s1coords = section1.getBoundingClientRect(); // this method is relative to visible viewport (x and y properties change values as we scroll and change position of the element on viewport basically)
-
-  // console.log(s1coords); //  DOMrect with positions, x and y positions, width and height of the element....
-  // console.log(e.target.getBoundingClientRect()); // e.target is element that was clicked (here it's btnScrollTo)
-  // current scroll position:
-  // console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
-  // height and width of viewport (without scroll bars, just the area available for content):
-  // console.log(
-  //   'height/width',
-  //   document.documentElement.clientHeight,
-  //   document.documentElement.clientWidth
-  // );
-
-  // Scrolling
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // ); // current position with current scroll
-
-  // making scroll smooth with passing in an object instead just argument:
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
-  // more modern way of doing this:
+  const s1coords = section1.getBoundingClientRect();
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
 //////////////////////////////////////
 //// Page navigation
 
-// document.querySelectorAll('.nav__link').forEach(function (el) {
-//   el.addEventListener('click', function (e) {
-//     e.preventDefault();
-//     const id = this.getAttribute('href'); // bc href looks like id of section to scroll into
-
-//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-//   });
-// });
-
-// Event delegation
-// 1. add event listener to a common parent element of all the elements that we're interested in
-// 2. in that event listener determine what element originated the event
-
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
 
-  // Matching strategy (to find only links that we are interested in, bc we want event only when we click on certain parts, not the entire container of nav bar)
   if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
@@ -104,10 +63,10 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 // Tabbed component
 
 tabsContainer.addEventListener('click', function (e) {
-  const clicked = e.target.closest('.operations__tab'); // there are span elements on the button that we can accidentally click, so we need to use closest() to find right element, to find a perent that matches a certain query
+  const clicked = e.target.closest('.operations__tab');
 
   // Guard clause
-  if (!clicked) return; // if there's nothing clicked then we want to immediately finish this func
+  if (!clicked) return;
 
   // Remove active classes
   tabs.forEach(t => t.classList.remove('operations__tab--active'));
@@ -124,8 +83,6 @@ tabsContainer.addEventListener('click', function (e) {
 
 ////////////////////////////////
 // Menu fade animation
-
-// (mouseenter doesn't bubble, mouseover bubbles up)
 
 const handleHover = function (e, opacity) {
   if (e.target.classList.contains('nav__link')) {
@@ -154,13 +111,6 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 //////////////////////////
 // Sticky navigation
 
-// window.addEventListener('scroll', function () {
-//   console.log(this.window.scrollY);
-
-//   if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
-//   else nav.classList.remove('sticky');
-// });
-
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
 
@@ -174,7 +124,6 @@ const stickyNav = function (entries) {
 const headerObserver = new IntersectionObserver(stickyNav, {
   root: null,
   threshold: 0,
-  // rootMargin: '-90px', //  box of certain amount of px that will be aplied outside of our target element (kinda extends or shortens the element) (in this case 90px is height of nav bar, so it appeares - becomes sticky - in the last 90px of header, in this rootMargin that we defined, but we can also caluclate the height dinamicaly:)
   rootMargin: `-${navHeight}px`,
 });
 headerObserver.observe(header);
@@ -204,7 +153,7 @@ allSections.forEach(function (section) {
 
 ///////////////////////////////////
 // Lazy loading images
-const imgTargets = document.querySelectorAll('img[data-src]'); // seleceted only the imgs that has this property
+const imgTargets = document.querySelectorAll('img[data-src]');
 
 const loadImg = function (entries, observer) {
   const [entry] = entries;
@@ -213,7 +162,6 @@ const loadImg = function (entries, observer) {
 
   // Replace src with data-src
   entry.target.src = entry.target.dataset.src;
-  //js will do this behind the scenes with loading event, so we can listen to it and do something:
 
   entry.target.addEventListener('load', function () {
     entry.target.classList.remove('lazy-img');
@@ -225,7 +173,7 @@ const loadImg = function (entries, observer) {
 const imgObserver = new IntersectionObserver(loadImg, {
   root: null,
   treshold: 0,
-  rootMargin: '200px', //to make imgs load before we really reach them so it's not noticable
+  rootMargin: '200px',
 });
 
 imgTargets.forEach(img => imgObserver.observe(img));
